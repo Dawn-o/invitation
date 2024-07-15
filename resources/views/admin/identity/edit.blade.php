@@ -14,40 +14,51 @@
 </head>
 
 <body>
-    <form action="{{ route('identity.store') }}" method="post">
+    <form action="{{ route('identity.update', $identity->identity_id) }}" method="post">
         @csrf
+        @method('PUT')
+
+        {{ session()->get('success') }}
 
         @foreach ($errors->all() as $error)
             <li class="text-danger">{{ $error }}</li>
         @endforeach
         <div class="input group mb-3">
-            <input type="text" name="male_fullname" placeholder="male_fullname" id="">
+            <input type="text" name="male_fullname" placeholder="male_fullname"
+                value="{{ $identity->male_fullname }}" id="">
         </div>
         <div class="input group mb-3">
-            <input type="text" name="male_nickname" placeholder="male_nickname" id="">
+            <input type="text" name="male_nickname" placeholder="male_nickname"
+                value="{{ $identity->male_nickname }}" id="">
         </div>
         <div class="input group mb-3">
-            <input type="text" name="male_description" placeholder="male_description" id="">
+            <input type="text" name="male_description" placeholder="male_description"
+                value="{{ $identity->male_description }}" id="">
 
         </div>
         <div class="input group mb-3">
-            <input type="text" name="male_socmed" placeholder="male_socmed" id="">
+            <input type="text" name="male_socmed" placeholder="male_socmed" value="{{ $identity->male_socmed }}"
+                id="">
 
         </div>
         <div class="input group mb-3">
-            <input type="text" name="female_fullname" placeholder="female_fullname" id="">
+            <input type="text" name="female_fullname" placeholder="female_fullname"
+                value="{{ $identity->female_fullname }}" id="">
 
         </div>
         <div class="input group mb-3">
-            <input type="text" name="female_nickname" placeholder="female_nickname" id="">
+            <input type="text" name="female_nickname" placeholder="female_nickname"
+                value="{{ $identity->female_nickname }}" id="">
 
         </div>
         <div class="input group mb-3">
-            <input type="text" name="female_description" placeholder="female_description" id="">
+            <input type="text" name="female_description" placeholder="female_description"
+                value="{{ $identity->female_description }}" id="">
 
         </div>
         <div class="input group mb-3">
-            <input type="text" name="female_socmed" placeholder="female_socmed" id="">
+            <input type="text" name="female_socmed" placeholder="female_socmed"
+                value="{{ $identity->female_socmed }}" id="">
 
         </div>
         <button class="btn btn-success" type="submit">Submit</button>

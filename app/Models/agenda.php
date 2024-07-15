@@ -10,8 +10,9 @@ class agenda extends Model
     use HasFactory;
 
     protected $fillable = [
+        'identity_id',
         'agenda_name',
-        'agenda_event',
+        'agenda_location',
         'agenda_date',
     ];
 }

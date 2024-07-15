@@ -9,6 +9,8 @@ class identity extends Model
 {
     use HasFactory;
     protected $primaryKey = 'identity_id';
+    public $incrementing = false;
+
     protected $fillable = [
         'identity_id',
         'male_fullname',

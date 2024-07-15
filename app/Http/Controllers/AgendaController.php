@@ -11,25 +11,25 @@ class AgendaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($identity_id)
+    public function index($identity)
     {
-        $data = Agenda::all()->where('identity_id', $identity_id);
+        $agendas = Agenda::all()->where('identity_id', $identity);
 
-        return view('admin.agenda.list', compact('data'));
+        return view('admin.agenda.list', compact('agendas', 'identity'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($identity)
     {
-        return view('/admin/agenda/create');
+        return view('/admin/agenda/create', compact('identity'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $identity)
     {
         $request->validate([
             'agenda_name' => 'required|string|max:255',
@@ -39,12 +39,13 @@ class AgendaController extends Controller
 
 
         Agenda::create([
+            'identity_id' => $identity,
             'agenda_name' => $request->agenda_name,
             'agenda_location' => $request->agenda_location,
             'agenda_date' => $request->agenda_date,
         ]);
 
-        return redirect()->route('agenda.index')->with(['success' => 'Add Data Success!']);
+        return redirect()->route('agenda.index', $identity)->with(['success' => 'Added agendas Success!']);
     }
 
     /**
@@ -58,24 +59,43 @@ class AgendaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(agenda $agenda)
+    public function edit($identity, $agenda)
     {
-        //
+        $agenda = Agenda::Where('id', $agenda)->first();
+        return view('/admin/agenda/edit', compact('agenda', 'identity'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, agenda $agenda)
+    public function update(Request $request, $identity, $agenda)
     {
-        //
+        $request->validate([
+            'agenda_name' => 'required|string|max:255',
+            'agenda_location' => 'required|string|max:255',
+            'agenda_date' => 'required|string|max:255',
+        ]);
+
+        $agenda = Agenda::Where('id', $agenda)->first();
+
+        $agenda->update([
+            'agenda_name' => $request->agenda_name,
+            'agenda_location' => $request->agenda_location,
+            'agenda_date' => $request->agenda_date,
+        ]);
+
+        return redirect()->route('agenda.index', $identity)->with(['success' => 'Updated agendas Success!']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(agenda $agenda)
+    public function destroy($identity, $agenda)
     {
-        //
+        $agenda = Agenda::Where('id', $agenda)->first();
+
+        $agenda->delete();
+
+        return redirect()->route('agenda.index', $identity)->with(['success' => 'Deleted agendas Success!']);
     }
 }
