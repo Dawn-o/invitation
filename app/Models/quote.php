@@ -9,6 +9,7 @@ class quote extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'identity_id',
         'quote',
         'source',
     ];

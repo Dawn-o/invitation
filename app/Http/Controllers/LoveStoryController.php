@@ -10,22 +10,24 @@ class LoveStoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($identity)
     {
-    }
+        $love_stories = love_story::all()->where('identity_id', $identity);
 
+        return view('admin.love_story.list', compact('love_stories', 'identity'));
+    }
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($identity)
     {
-        return view('/admin/love_story/create');
+        return view('/admin/love_story/create', compact('identity'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $identity)
     {
         $request->validate([
             'story' => 'required|string|max:255',
@@ -34,11 +36,12 @@ class LoveStoryController extends Controller
 
 
         love_story::create([
+            'identity_id' => $identity,
             'story' => $request->story,
-            'agenda_date' => $request->agenda_date,
+            'date' => $request->date,
         ]);
 
-        return redirect()->route('love-story.index')->with(['success' => 'Add Data Success!']);
+        return redirect()->route('love_story.index', $identity)->with(['success' => 'Added Data Success!']);
     }
 
     /**
@@ -52,24 +55,44 @@ class LoveStoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(love_story $love_story)
+    public function edit($identity, $love_story)
     {
-        //
+        $love_story = love_story::Where('id', $love_story)->first();
+        return view('/admin/love_story/edit', compact('love_story', 'identity'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, love_story $love_story)
+    public function update(Request $request, $identity, $love_story)
     {
-        //
+        $request->validate([
+            'story' => 'required|string|max:255',
+            'date' => 'required|string|max:255',
+        ]);
+
+        $love_story = love_story::where('id', $love_story)->first();
+
+        $love_story->update([
+            'identity_id' => $identity,
+            'story' => $request->story,
+            'date' => $request->date,
+        ]);
+
+        return redirect()->route('love_story.index', $identity)->with(['success' => 'Updated Data Success!']);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(love_story $love_story)
+    public function destroy($identity, $love_story)
     {
-        //
+        $love_story = love_story::where('id', $love_story)->first();
+
+        $love_story->delete();
+
+        return redirect()->route('love_story.index', $identity)->with(['success' => 'Deleted Data Success!']);
+
     }
 }

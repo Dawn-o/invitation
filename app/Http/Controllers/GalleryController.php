@@ -4,42 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\gallery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($identity)
     {
-        //
+        $galleries = Gallery::all()->where('identity_id', $identity);
+        return view('/admin/gallery/list', compact('galleries', 'identity'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($identity)
     {
-        return view('/admin/gallery/create');
+        return view('/admin/gallery/create', compact('identity'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $identity)
     {
         $request->validate([
-            'photo' => 'required|string|max:255',
+            'photo' => 'required',
+            'photo.*' => 'image|mimes:jpeg,jpg,png,webp|max:2048',
             'description' => 'required|string|max:255',
         ]);
 
 
-        gallery::create([
-            'photo' => $request->photo,
-            'description' => $request->description,
-        ]);
+        foreach ($request->file('photo') as $image) {
+            $image->storeAs('public/galleries', $image->hashName());
+            gallery::create([
+                'identity_id' => $identity,
+                'photo' => $image->hashName(),
+                'description' => $request->description,
+            ]);
+        }
 
-        return redirect()->route('gallery.index')->with(['success' => 'Add Data Success!']);
+        return redirect()->route('gallery.index', $identity)->with(['success' => 'Added Images Success!']);
     }
 
     /**
@@ -53,24 +60,55 @@ class GalleryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(gallery $gallery)
+    public function edit($identity, $gallery)
     {
-        //
+        $gallery = Gallery::where('id', $gallery)->first();
+        return view('/admin/gallery/edit', compact('gallery', 'identity'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, gallery $gallery)
+    public function update(Request $request, $identity, $gallery)
     {
-        //
+        $request->validate([
+            'photo' => 'image|mimes:jpeg,jpg,png,webp|max:2048',
+            'description' => 'required|string|max:255',
+        ]);
+
+        $gallery = gallery::where('id', $gallery)->first();
+
+        if ($request->hasFile('photo')) {
+
+            $image = $request->file('photo');
+            $image->storeAs('public/galleries', $image->hashName());
+
+            Storage::delete('public/galleries/' . $gallery->photo);
+
+            $gallery->update([
+                'photo' => $image->hashName(),
+                'description' => $request->description,
+            ]);
+        } else {
+            $gallery->update([
+                'description' => $request->description,
+            ]);
+        }
+
+        return redirect()->route('gallery.index', $identity)->with(['success' => 'Added Images Success!']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(gallery $gallery)
+    public function destroy($identity, $gallery)
     {
-        //
+        $gallery = gallery::where('id', $gallery)->first();
+
+        Storage::delete('public/galleries/' . $gallery->photo);
+
+        $gallery->delete();
+
+        return redirect()->route('gallery.index', $identity)->with(['success' => 'Deleted Images Success!']);
     }
 }

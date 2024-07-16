@@ -9,6 +9,7 @@ class love_story extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'identity_id',
         'story',
         'date',
     ];

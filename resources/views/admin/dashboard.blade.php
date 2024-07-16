@@ -17,6 +17,8 @@
     <p class="text-success"> {{ session()->get('success') }} </p>
     <a href="{{ route('identity.create') }}"
         class="btn btn-success text-white">Add Data</a>
+    <a href="{{ route('logout') }}"
+        class="btn btn-danger text-white">logout</a>
     <table class="table">
         <thead>
             <tr>

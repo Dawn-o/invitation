@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\agenda;
-use App\Models\identity;
 use Illuminate\Http\Request;
 
 class AgendaController extends Controller
@@ -36,7 +35,6 @@ class AgendaController extends Controller
             'agenda_location' => 'required|string|max:255',
             'agenda_date' => 'required|string|max:255',
         ]);
-
 
         Agenda::create([
             'identity_id' => $identity,
