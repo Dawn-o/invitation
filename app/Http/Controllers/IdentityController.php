@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\gallery;
 use App\Models\identity;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class IdentityController extends Controller
 {
@@ -115,8 +117,13 @@ class IdentityController extends Controller
      */
     public function destroy($identity)
     {
+        $gallery = gallery::all()->where('identity_id', $identity);
         $identity = Identity::Where('identity_id',  $identity)->first();
-
+        
+        foreach ($gallery as $images) {
+            $image = $images->photo;
+            Storage::delete('public/galleries/' . $image);
+        }
         $identity->delete();
 
         return redirect()->route('dashboard')->with(['success' => 'Deleted identities Success!']);

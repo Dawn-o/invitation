@@ -32,7 +32,7 @@ class GalleryController extends Controller
     {
         $request->validate([
             'photo' => 'required',
-            'photo.*' => 'image|mimes:jpeg,jpg,png,webp|max:2048',
+            'photo.*' => 'image|mimes:jpeg,jpg,png,webp|max:5120',
             'description' => 'required|string|max:255',
         ]);
 
@@ -72,7 +72,7 @@ class GalleryController extends Controller
     public function update(Request $request, $identity, $gallery)
     {
         $request->validate([
-            'photo' => 'image|mimes:jpeg,jpg,png,webp|max:2048',
+            'photo' => 'image|mimes:jpeg,jpg,png,webp|max:5120',
             'description' => 'required|string|max:255',
         ]);
 
