@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\love_story;
+use App\Models\Love_story;
 use Illuminate\Http\Request;
 
 class LoveStoryController extends Controller
@@ -12,7 +12,7 @@ class LoveStoryController extends Controller
      */
     public function index($identity)
     {
-        $love_stories = love_story::all()->where('identity_id', $identity);
+        $love_stories = Love_story::all()->where('identity_id', $identity);
 
         return view('admin.love_story.list', compact('love_stories', 'identity'));
     }
@@ -35,7 +35,7 @@ class LoveStoryController extends Controller
         ]);
 
 
-        love_story::create([
+        Love_story::create([
             'identity_id' => $identity,
             'story' => $request->story,
             'date' => $request->date,
@@ -57,7 +57,7 @@ class LoveStoryController extends Controller
      */
     public function edit($identity, $love_story)
     {
-        $love_story = love_story::Where('id', $love_story)->first();
+        $love_story = Love_story::Where('id', $love_story)->first();
         return view('/admin/love_story/edit', compact('love_story', 'identity'));
     }
 
@@ -71,7 +71,7 @@ class LoveStoryController extends Controller
             'date' => 'required|string|max:255',
         ]);
 
-        $love_story = love_story::where('id', $love_story)->first();
+        $love_story = Love_story::where('id', $love_story)->first();
 
         $love_story->update([
             'identity_id' => $identity,
@@ -88,7 +88,7 @@ class LoveStoryController extends Controller
      */
     public function destroy($identity, $love_story)
     {
-        $love_story = love_story::where('id', $love_story)->first();
+        $love_story = Love_story::where('id', $love_story)->first();
 
         $love_story->delete();
 

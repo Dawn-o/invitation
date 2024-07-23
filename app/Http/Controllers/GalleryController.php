@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\gallery;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,7 +39,7 @@ class GalleryController extends Controller
 
         foreach ($request->file('photo') as $image) {
             $image->storeAs('public/galleries', $image->hashName());
-            gallery::create([
+            Gallery::create([
                 'identity_id' => $identity,
                 'photo' => $image->hashName(),
                 'description' => $request->description,
@@ -76,7 +76,7 @@ class GalleryController extends Controller
             'description' => 'required|string|max:255',
         ]);
 
-        $gallery = gallery::where('id', $gallery)->first();
+        $gallery = Gallery::where('id', $gallery)->first();
 
         if ($request->hasFile('photo')) {
 
@@ -103,7 +103,7 @@ class GalleryController extends Controller
      */
     public function destroy($identity, $gallery)
     {
-        $gallery = gallery::where('id', $gallery)->first();
+        $gallery = Gallery::where('id', $gallery)->first();
 
         Storage::delete('public/galleries/' . $gallery->photo);
 

@@ -27,7 +27,7 @@
         <tbody>
             @foreach ($galleries as $gallery)
                 <tr>
-                    <td> <img src="{{ asset('/storage/galleries/' . $gallery->photo) }}" alt=""></td>
+                    <td> <img src="{{ asset('/storage/galleries/' . $gallery->photo) }}" width="30%" height="30%" alt=""></td>
                     <td> {{ $gallery->description }}</td>
                     <td>
                         <form onsubmit="return confirm('Apakah Anda Yakin ?');"

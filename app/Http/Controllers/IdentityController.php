@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\gallery;
-use App\Models\identity;
+use App\Models\Gallery;
+use App\Models\Identity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -117,7 +117,7 @@ class IdentityController extends Controller
      */
     public function destroy($identity)
     {
-        $gallery = gallery::all()->where('identity_id', $identity);
+        $gallery = Gallery::all()->where('identity_id', $identity);
         $identity = Identity::Where('identity_id',  $identity)->first();
         
         foreach ($gallery as $images) {
